@@ -1,29 +1,32 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
-from starlette.responses import JSONResponse
+from fastapi.responses import JSONResponse
 
+from app.initialization import populate_data
 from exceptions.omdb_repository_exceptions import OmdbRepositoryException
 from logger import logger
-from routers.movie import router
+from repositories.database.session_factory import get_session
+from routers.movie_router import router
 
 
 @asynccontextmanager
 async def startup(app: FastAPI):
     """App startup logic"""
-    logger.info("Starting the app...")
+    logger.info("Starting the app.")
+    async for session in get_session():
+        await populate_data(session=session)
     yield
+
 
 app = FastAPI(lifespan=startup)
 app.include_router(router)
 
 
+# Middlewares
 @app.exception_handler(OmdbRepositoryException)
 async def omdb_repository_exception_handler(request: Request, exc: OmdbRepositoryException):
     """
     Global handler for all OmdbRepositoryExceptions.
     """
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"error": exc.detail}
-    )
+    return JSONResponse(status_code=exc.status_code, content={"error": exc.detail})
