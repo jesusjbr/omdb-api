@@ -52,7 +52,7 @@ class MovieDatabaseRepository:
         return await session.scalar(count_query)
 
     @staticmethod
-    async def create(session: SessionDep, movie: MovieCreate):
+    async def create(session: SessionDep, movie: MovieCreate) -> Movie:
         """
         Inserts a new movie in the database.
         :param session: The database session to use for the query.
@@ -61,6 +61,10 @@ class MovieDatabaseRepository:
         movie_to_create: Movie = MovieDatabaseRepository._map_schema_to_model([movie])[0]
         session.add(movie_to_create)
         await session.commit()
+        query = (
+            select(Movie).where(Movie.imdb_id == movie.imdb_id).options(selectinload(Movie.ratings))
+        )
+        return (await session.execute(query)).scalar_one_or_none()
 
     @staticmethod
     async def get(session: SessionDep, id: int) -> Movie | None:

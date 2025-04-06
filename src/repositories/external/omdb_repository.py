@@ -140,6 +140,9 @@ class OmdbRepository:
             try:
                 return model.model_validate(response_body)
             except ValueError as e:
+                # OMDB Return 200 for 404
+                if "Error" in response_body and response_body["Error"] == "Movie not found!":
+                    raise OmdbRepositoryNotFoundException(detail=response_body)
                 raise OmdbRepositoryInvalidResponseFormatException(detail={"error": str(e)})
         elif status_code == status.HTTP_401_UNAUTHORIZED:
             raise OmdbRepositoryUnauthorizedException(detail=response_body)

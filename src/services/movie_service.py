@@ -14,7 +14,7 @@ class MovieService:
     """ """
 
     @staticmethod
-    async def insert_movie_by_title(session: SessionDep, title: str):
+    async def insert_movie_by_title(session: SessionDep, title: str) -> SingleMovieResponse:
         """
         Searches movies with given title in OMDB and stores them in our database.
         Even if the OMDB Endpoint returns only one movie when filtering by title,
@@ -27,9 +27,10 @@ class MovieService:
         movie: MovieImdbResponse = await OmdbRepository.get_movie_by_title(title=title)
         if not movie:
             raise MovieNotFoundException(detail={"title": title})
-        await MovieDatabaseRepository.create(
+        created_movie = await MovieDatabaseRepository.create(
             session=session, movie=MovieCreate.model_validate(movie.model_dump())
         )
+        return MovieGet.model_validate(created_movie)
 
     @staticmethod
     async def get_movies(

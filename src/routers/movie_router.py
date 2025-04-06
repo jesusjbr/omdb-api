@@ -11,7 +11,7 @@ router = APIRouter(prefix="/api/{version}/movies")
 
 
 @router.post("", tags=[TAG_MOVIE])
-async def insert_movie_by_title(session: SessionDep, body: InsertTitleBody):
+async def insert_movie_by_title(session: SessionDep, body: InsertTitleBody) -> SingleMovieResponse:
     """
     Searches movies with given title in OMDB and stores them in our database.
     :param session: A database session.

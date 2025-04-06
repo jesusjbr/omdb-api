@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, UniqueConstraint, Index
+from sqlalchemy import Integer, String, UniqueConstraint, Index, Date, Float
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from repositories.database.models.base import Base
@@ -12,28 +12,28 @@ class Movie(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(String)
-    year: Mapped[str] = mapped_column(String)
-    rated: Mapped[str] = mapped_column(String)
-    released: Mapped[str] = mapped_column(String)
-    runtime: Mapped[str] = mapped_column(String)
-    genre: Mapped[str] = mapped_column(String)
-    director: Mapped[str] = mapped_column(String)
-    writer: Mapped[str] = mapped_column(String)
-    actors: Mapped[str] = mapped_column(String)
-    plot: Mapped[str] = mapped_column(String)
-    language: Mapped[str] = mapped_column(String)
-    country: Mapped[str] = mapped_column(String)
-    awards: Mapped[str] = mapped_column(String)
-    poster: Mapped[str] = mapped_column(String)
-    metascore: Mapped[str] = mapped_column(String)
-    imdb_rating: Mapped[str] = mapped_column(String)
-    imdb_votes: Mapped[str] = mapped_column(String)
+    year: Mapped[int] = mapped_column(Integer)
+    rated: Mapped[str | None] = mapped_column(String, nullable=True)
+    released: Mapped[Date | None] = mapped_column(Date, nullable=True)
+    runtime: Mapped[str | None] = mapped_column(String, nullable=True)
+    genre: Mapped[str | None] = mapped_column(String, nullable=True)
+    director: Mapped[str | None] = mapped_column(String, nullable=True)
+    writer: Mapped[str | None] = mapped_column(String, nullable=True)
+    actors: Mapped[str | None] = mapped_column(String, nullable=True)
+    plot: Mapped[str | None] = mapped_column(String, nullable=True)
+    language: Mapped[str | None] = mapped_column(String, nullable=True)
+    country: Mapped[str | None] = mapped_column(String, nullable=True)
+    awards: Mapped[str | None] = mapped_column(String, nullable=True)
+    poster: Mapped[str | None] = mapped_column(String, nullable=True)
+    metascore: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    imdb_rating: Mapped[float | None] = mapped_column(Float, nullable=True)
+    imdb_votes: Mapped[int | None] = mapped_column(Integer, nullable=True)
     imdb_id: Mapped[str] = mapped_column(String)
     type: Mapped[str] = mapped_column(String)
-    dvd: Mapped[str] = mapped_column(String)
-    box_office: Mapped[str] = mapped_column(String)
-    production: Mapped[str] = mapped_column(String)
-    website: Mapped[str] = mapped_column(String)
+    dvd: Mapped[str | None] = mapped_column(String, nullable=True)
+    box_office: Mapped[str | None] = mapped_column(String, nullable=True)
+    production: Mapped[str | None] = mapped_column(String, nullable=True)
+    website: Mapped[str | None] = mapped_column(String, nullable=True)
 
     ratings: Mapped[list["Rating"]] = relationship(
         back_populates="movie", cascade="all, delete-orphan"

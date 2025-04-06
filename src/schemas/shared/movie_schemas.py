@@ -1,3 +1,5 @@
+from datetime import date
+
 from pydantic import BaseModel
 
 
@@ -5,39 +7,42 @@ class Rating(BaseModel):
     source: str
     value: str
 
-
-class RatingGet(Rating):
-    id: int
-
     class Config:
         from_attributes = True
 
 
+"""
+class RatingGet(Rating):
+    class Config:
+        from_attributes = True
+"""
+
+
 class MovieBase(BaseModel):
     title: str
-    year: str
-    rated: str
-    released: str
-    runtime: str
-    genre: str
-    director: str
-    writer: str
-    actors: str
-    plot: str
-    language: str
-    country: str
-    awards: str
-    poster: str
+    year: int
+    rated: str | None
+    released: date | None
+    runtime: str | None
+    genre: str | None
+    director: str | None
+    writer: str | None
+    actors: str | None
+    plot: str | None
+    language: str | None
+    country: str | None
+    awards: str | None
+    poster: str | None
     ratings: list[Rating]
-    metascore: str
-    imdb_rating: str
-    imdb_votes: str
+    metascore: int | None
+    imdb_rating: float | None
+    imdb_votes: int | None
     imdb_id: str
     type: str
-    dvd: str
-    box_office: str
-    production: str
-    website: str
+    dvd: str | None
+    box_office: str | None
+    production: str | None
+    website: str | None
 
 
 class MovieCreate(MovieBase):
@@ -46,7 +51,6 @@ class MovieCreate(MovieBase):
 
 class MovieGet(MovieBase):
     id: int
-    ratings: list[RatingGet]
 
     class Config:
         from_attributes = True

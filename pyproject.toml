@@ -1,2 +1,3 @@
 [tool.ruff]
+exclude = ["**/__init__.py"]
 line-length = 100
