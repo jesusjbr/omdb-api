@@ -1,15 +1,21 @@
 from pydantic import BaseModel, Field
 
-from schemas.shared.movie_schemas import MovieCreate
+
+class MovieSearch(BaseModel):
+    title: str = Field(alias="Title")
+    year: str = Field(alias="Year")
+    imdb_id: str = Field(alias="imdbID")
+    type: str = Field(alias="Type")
+    poster: str = Field(alias="Poster")
 
 
 class MovieSearchResponse(BaseModel):
-    movies: list[MovieCreate] = Field(alias="Search")
+    movies: list[MovieSearch] = Field(alias="Search")
     total_results: str = Field(alias="totalResults")
     response: str = Field(alias="Response")
 
 
-class Rating(BaseModel):
+class RatingImdbResponse(BaseModel):
     source: str = Field(alias="Source")
     value: str = Field(alias="Value")
 
@@ -29,7 +35,7 @@ class MovieImdbResponse(BaseModel):
     country: str = Field(alias="Country")
     awards: str = Field(alias="Awards")
     poster: str = Field(alias="Poster")
-    ratings: list[Rating] = Field(alias="Ratings")
+    ratings: list[RatingImdbResponse] = Field(alias="Ratings")
     metascore: str = Field(alias="Metascore")
     imdb_rating: str = Field(alias="imdbRating")
     imdb_votes: str = Field(alias="imdbVotes")

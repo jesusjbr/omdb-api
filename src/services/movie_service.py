@@ -3,8 +3,10 @@ from core.deps import SessionDep
 from exceptions.movie_exceptions import MovieNotFoundException
 from repositories.database.db_movie_repository import MovieDatabaseRepository
 from repositories.database.models.movie import Movie
+from repositories.external.omdb_repository import OmdbRepository
 from schemas.responses.movie_responses import MoviesResponse, SingleMovieResponse
-from schemas.shared.movie_schemas import MovieGet
+from schemas.responses.omdb_responses import MovieImdbResponse
+from schemas.shared.movie_schemas import MovieGet, MovieCreate
 from schemas.shared.pagination_filter import Pagination
 
 
@@ -12,21 +14,22 @@ class MovieService:
     """ """
 
     @staticmethod
-    async def insert_movies_by_title(session: SessionDep, title: str) -> SingleMovieResponse:
+    async def insert_movie_by_title(session: SessionDep, title: str):
         """
         Searches movies with given title in OMDB and stores them in our database.
+        Even if the OMDB Endpoint returns only one movie when filtering by title,
+        title is not a UNIQUE field and its value is repeated. Thus, there could be multiple movies
+        with the same title.
         :param session: A database session.
         :param title: The title that movies should match exactly.
         :return: The inserted movies if there is some.
         """
-
-        pass
-        """
-        movie: Movie = await OmdbRepository.get_movies_by_title(title=title)
+        movie: MovieImdbResponse = await OmdbRepository.get_movie_by_title(title=title)
         if not movie:
-            raise MovieNotFoundException(detail={"id": id})
-        return MovieGet.model_validate(movie)
-        """
+            raise MovieNotFoundException(detail={"title": title})
+        await MovieDatabaseRepository.create(
+            session=session, movie=MovieCreate.model_validate(movie.model_dump())
+        )
 
     @staticmethod
     async def get_movies(
@@ -46,9 +49,11 @@ class MovieService:
         limit: int
         offset: int
         limit, offset = MovieService._calculate_limit_offset(pagination=pagination)
+
         movies, total_count = await MovieDatabaseRepository.get_all_paginated(
             session=session, title=title, limit=limit, offset=offset
         )
+
         default_order = ORDER_BY_ID if title else ORDER_BY_TITLE
         return MoviesResponse(
             page=pagination.page,

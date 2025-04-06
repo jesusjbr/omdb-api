@@ -47,11 +47,7 @@ class OmdbRepository:
         :param imdb_ids: list of imdb_id
         :return: List of movies
         """
-        client = OmdbRepository.get_client()
-        tasks = [
-            OmdbRepository._fetch_movie_by_imdb_id(client=client, imdb_id=imdb_id)
-            for imdb_id in imdb_ids
-        ]
+        tasks = [OmdbRepository._fetch_movie_by_imdb_id(imdb_id=imdb_id) for imdb_id in imdb_ids]
         movies_responses: list[MovieImdbResponse] = await asyncio.gather(*tasks)
         return movies_responses
 
@@ -63,9 +59,8 @@ class OmdbRepository:
         :param search_term: The term to search within movie titles.
         :return: List of imdb_ids
         """
-        client = OmdbRepository.get_client()
         first_page_results: MovieSearchResponse = await OmdbRepository._fetch_page_by_search_term(
-            client=client, search_term=search_term, page=1
+            search_term=search_term, page=1
         )
 
         # Extract total number of results and calculate number of pages needed
@@ -75,9 +70,7 @@ class OmdbRepository:
 
         # Fetch remaining pages concurrently
         tasks = [
-            OmdbRepository._fetch_page_by_search_term(
-                client=client, search_term=search_term, page=page
-            )
+            OmdbRepository._fetch_page_by_search_term(search_term=search_term, page=page)
             for page in range(2, total_pages + 1)
         ]
         movies_responses: list[MovieSearchResponse] = await asyncio.gather(*tasks)
@@ -88,6 +81,17 @@ class OmdbRepository:
             imdb_ids.extend([movie.imdb_id for movie in response.movies])
 
         return imdb_ids
+
+    @staticmethod
+    async def get_movie_by_title(title: str) -> MovieImdbResponse:
+        params = {"t": title, "apikey": OMDB_API_KEY, "type": TYPE_MOVIE}
+        async with AsyncClient() as client:
+            response: Response = await client.get(url=OMDB_API_URL, params=params)
+        response_body = response.json()
+        validated_movie_response = OmdbRepository._validate_response(
+            response.status_code, response_body, MovieImdbResponse
+        )
+        return validated_movie_response
 
     @staticmethod
     async def _fetch_page_by_search_term(search_term: str, page: int) -> MovieSearchResponse:
@@ -102,7 +106,7 @@ class OmdbRepository:
         params = {"s": search_term, "apikey": OMDB_API_KEY, "page": page, "type": TYPE_MOVIE}
         response: Response = await client.get(url=OMDB_API_URL, params=params)
         response_body = response.json()
-        validated_movies_response = await OmdbRepository._validate_response(
+        validated_movies_response = OmdbRepository._validate_response(
             response.status_code, response_body, MovieSearchResponse
         )
         return validated_movies_response
@@ -117,7 +121,7 @@ class OmdbRepository:
         params = {"i": imdb_id, "apikey": OMDB_API_KEY, "type": TYPE_MOVIE}
         response: Response = await client.get(url=OMDB_API_URL, params=params)
         response_body = response.json()
-        validated_movie_response = await OmdbRepository._validate_response(
+        validated_movie_response = OmdbRepository._validate_response(
             response.status_code, response_body, MovieImdbResponse
         )
 

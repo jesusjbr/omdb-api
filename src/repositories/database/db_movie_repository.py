@@ -1,7 +1,9 @@
 from sqlalchemy import select, func, delete, Function, Select
+from sqlalchemy.orm import selectinload
 
 from core.deps import SessionDep
 from repositories.database.models.movie import Movie
+from repositories.database.models.rating import Rating
 from schemas.shared.movie_schemas import MovieCreate
 
 
@@ -15,9 +17,29 @@ class MovieDatabaseRepository:
         :param session: The database session to use for the query.
         :param movies: A list of movies to insert.
         """
-        movies_to_save = [Movie(**movie.model_dump()) for movie in movies]
-        session.add_all(movies_to_save)
+        movies_to_insert: list[Movie] = MovieDatabaseRepository._map_schema_to_model(movies)
+        session.add_all(movies_to_insert)
         await session.commit()
+
+    @staticmethod
+    def _map_schema_to_model(movies: list[MovieCreate]):
+        """
+        A manual mapping of types that highlights the impedance mismatch between schemas and models.
+        :param movies: Movies to map from list[MovieCreate] to list[Movie]
+        :return: Transformed movies as list[Movie]
+        """
+        movies_to_insert: list[Movie] = []
+        for movie_create in movies:
+            movie_data: dict = movie_create.model_dump(exclude={"ratings"})
+            movie: Movie = Movie(**movie_data)
+
+            if movie_create.ratings:
+                for rating_create in movie_create.ratings:
+                    rating: Rating = Rating(**rating_create.model_dump())
+                    movie.ratings.append(rating)
+
+            movies_to_insert.append(movie)
+        return movies_to_insert
 
     @staticmethod
     async def count(session: SessionDep) -> int:
@@ -36,7 +58,8 @@ class MovieDatabaseRepository:
         :param session: The database session to use for the query.
         :param movie: The movie to insert.
         """
-        session.add(movie)
+        movie_to_create: Movie = MovieDatabaseRepository._map_schema_to_model([movie])[0]
+        session.add(movie_to_create)
         await session.commit()
 
     @staticmethod
@@ -47,8 +70,8 @@ class MovieDatabaseRepository:
         :param id: Id of the movie to retrieve, do not confuse with imdb_id
         :return: If found, returns the movie, otherwise returns None.
         """
-        query = select(Movie).where(Movie.id == id)
-        return await session.scalar(query)
+        query = select(Movie).where(Movie.id == id).options(selectinload(Movie.ratings))
+        return (await session.execute(query)).scalar_one_or_none()
 
     @staticmethod
     async def get_all_paginated(
@@ -65,12 +88,12 @@ class MovieDatabaseRepository:
         :return: Tuple containing a list of movies, and total count of movies.
         """
         count: Function = func.count().over().label("total_count")
-        query: Select[tuple[Movie, int]] = select(Movie, count)
+        query: Select[tuple[Movie, int]] = select(Movie, count).options(selectinload(Movie.ratings))
         if not title:
             query = query.order_by(Movie.title)
         if title:
             query = query.where(Movie.title == title).order_by(Movie.id)
-        if limit and offset:
+        if limit is not None and offset is not None:
             query = query.limit(limit).offset(offset)
         rows: list[tuple[Movie, int]] = list((await session.execute(query)).all())
         # It would have been cleaner to use a separate count query, but in terms of performance

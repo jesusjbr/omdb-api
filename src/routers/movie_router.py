@@ -2,7 +2,6 @@ from fastapi import APIRouter, Path, status
 
 from config import TAG_MOVIE
 from core.deps import SessionDep
-from repositories.external.omdb_repository import OmdbRepository
 from schemas.requests.insert_movies_request import InsertTitleBody
 from schemas.responses.movie_responses import MoviesResponse, SingleMovieResponse
 from schemas.shared.pagination_filter import Pagination
@@ -12,7 +11,7 @@ router = APIRouter(prefix="/api/{version}/movies")
 
 
 @router.post("", tags=[TAG_MOVIE])
-async def insert_movies_by_title(session: SessionDep, body: InsertTitleBody) -> MoviesResponse:
+async def insert_movie_by_title(session: SessionDep, body: InsertTitleBody):
     """
     Searches movies with given title in OMDB and stores them in our database.
     :param session: A database session.
@@ -20,12 +19,7 @@ async def insert_movies_by_title(session: SessionDep, body: InsertTitleBody) -> 
     :return: The inserted movies if there is some.
     """
 
-    await OmdbRepository._fetch_movie_by_imdb_id("tt0848228")
-    """
-    return await MovieService.insert_movies_by_title(
-        session=session, title=body.title
-    )
-    """
+    return await MovieService.insert_movie_by_title(session=session, title=body.title)
 
 
 @router.get("", tags=[TAG_MOVIE])

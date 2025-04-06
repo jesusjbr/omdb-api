@@ -2,6 +2,7 @@ from sqlalchemy import Integer, String, UniqueConstraint, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from repositories.database.models.base import Base
+from repositories.database.models.rating import Rating
 
 
 class Movie(Base):
@@ -34,7 +35,7 @@ class Movie(Base):
     production: Mapped[str] = mapped_column(String)
     website: Mapped[str] = mapped_column(String)
 
-    ratings: Mapped[list["MovieRating"]] = relationship(
+    ratings: Mapped[list["Rating"]] = relationship(
         back_populates="movie", cascade="all, delete-orphan"
     )
 
