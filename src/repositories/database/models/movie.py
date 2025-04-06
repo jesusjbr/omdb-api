@@ -1,6 +1,7 @@
 from sqlalchemy import Integer, String, UniqueConstraint, Index, Date, Float
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from config import IMDB_ID_UNIQUE_CONSTRAINT
 from repositories.database.models.base import Base
 from repositories.database.models.rating import Rating
 
@@ -40,7 +41,7 @@ class Movie(Base):
     )
 
     __table_args__ = (
-        UniqueConstraint("imdb_id", name="imdb_id_unique"),
+        UniqueConstraint("imdb_id", name=IMDB_ID_UNIQUE_CONSTRAINT),
         Index("ix_movie_id", "id"),
         Index("ix_movie_imdb_id", "imdb_id"),
     )

@@ -2,6 +2,7 @@ DROP INDEX IF EXISTS ix_movie_id;
 DROP INDEX IF EXISTS ix_movie_imdb_id;
 DROP TABLE IF EXISTS rating;
 DROP TABLE IF EXISTS movie;
+DROP TABLE IF EXISTS member;
 
 
 CREATE TABLE IF NOT EXISTS movie (
@@ -40,4 +41,12 @@ CREATE TABLE IF NOT EXISTS rating (
     source TEXT,
     value TEXT,
     UNIQUE(movie_id, source, value)
+);
+
+CREATE TABLE IF NOT EXISTS member (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR NOT NULL,
+    hashed_password VARCHAR NOT NULL,
+    is_admin BOOLEAN NOT NULL,
+    CONSTRAINT username_unique UNIQUE (username)
 );

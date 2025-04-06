@@ -1,6 +1,8 @@
 from sqlalchemy import select, func, delete, Function, Select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import selectinload
 
+from config import IMDB_ID_UNIQUE_CONSTRAINT
 from core.deps import SessionDep
 from repositories.database.models.movie import Movie
 from repositories.database.models.rating import Rating
@@ -122,3 +124,13 @@ class MovieDatabaseRepository:
         result = await session.execute(query)
         await session.commit()
         return result.rowcount == 1
+
+    @staticmethod
+    def check_already_exists(exception: Exception) -> bool:
+        """Trick to avoid a round-trip to the database just to know if a Record exist.
+        Since is implemented in the repository we get weak coupling. Anyway, every python ORM / sql
+        driver has this."""
+        if isinstance(exception, IntegrityError):
+            if IMDB_ID_UNIQUE_CONSTRAINT in str(exception.orig):
+                return True
+        return False

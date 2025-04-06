@@ -1,6 +1,8 @@
-from config import ORDER_BY_TITLE, ORDER_TYPE_ASC, ORDER_BY_ID
+from sqlalchemy.exc import IntegrityError
+
+from config import ORDER_BY_TITLE, ORDER_TYPE_ASC, ORDER_BY_ID, IMDB_ID_UNIQUE_CONSTRAINT
 from core.deps import SessionDep
-from exceptions.movie_exceptions import MovieNotFoundException
+from exceptions.movie_exceptions import MovieNotFoundException, MovieAlreadyExistsException
 from repositories.database.db_movie_repository import MovieDatabaseRepository
 from repositories.database.models.movie import Movie
 from repositories.external.omdb_repository import OmdbRepository
@@ -27,9 +29,15 @@ class MovieService:
         movie: MovieImdbResponse = await OmdbRepository.get_movie_by_title(title=title)
         if not movie:
             raise MovieNotFoundException(detail={"title": title})
-        created_movie = await MovieDatabaseRepository.create(
-            session=session, movie=MovieCreate.model_validate(movie.model_dump())
-        )
+        try:
+            created_movie = await MovieDatabaseRepository.create(
+                session=session, movie=MovieCreate.model_validate(movie.model_dump())
+            )
+        except Exception as e:
+            if MovieDatabaseRepository.check_already_exists(e):
+                raise MovieAlreadyExistsException(detail={"title": title})
+            else:
+                raise e
         return MovieGet.model_validate(created_movie)
 
     @staticmethod

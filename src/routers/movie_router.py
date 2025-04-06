@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Path, status
+from fastapi import APIRouter, Path, status, Depends
 
 from config import TAG_MOVIE
-from core.deps import SessionDep
+from core.deps import SessionDep, get_current_user, get_current_user_admin
 from schemas.requests.insert_movies_request import InsertTitleBody
 from schemas.responses.movie_responses import MoviesResponse, SingleMovieResponse
 from schemas.shared.pagination_filter import Pagination
@@ -10,10 +10,17 @@ from services.movie_service import MovieService
 router = APIRouter(prefix="/api/{version}/movies")
 
 
-@router.post("", tags=[TAG_MOVIE])
+@router.post(
+    "",
+    dependencies=[Depends(get_current_user)],
+    tags=[TAG_MOVIE],
+    status_code=status.HTTP_201_CREATED,
+)
 async def insert_movie_by_title(session: SessionDep, body: InsertTitleBody) -> SingleMovieResponse:
     """
     Searches movies with given title in OMDB and stores them in our database.
+    When filtering only by title, OMDB will return only one result, even if there exists more with
+    the same title.
     :param session: A database session.
     :param body: The title that movies should match exactly.
     :return: The inserted movies if there is some.
@@ -22,7 +29,7 @@ async def insert_movie_by_title(session: SessionDep, body: InsertTitleBody) -> S
     return await MovieService.insert_movie_by_title(session=session, title=body.title)
 
 
-@router.get("", tags=[TAG_MOVIE])
+@router.get("", dependencies=[Depends(get_current_user)], tags=[TAG_MOVIE])
 async def get_movies(
     session: SessionDep,
     title: str | None = None,
@@ -44,7 +51,7 @@ async def get_movies(
     )
 
 
-@router.get("/{id}", tags=[TAG_MOVIE])
+@router.get("/{id}", dependencies=[Depends(get_current_user)], tags=[TAG_MOVIE])
 async def get_single_movie(session: SessionDep, id: int = Path()) -> SingleMovieResponse:
     """
     Retrieves a movie by id.
@@ -55,7 +62,12 @@ async def get_single_movie(session: SessionDep, id: int = Path()) -> SingleMovie
     return await MovieService.get_single_movie(session=session, id=id)
 
 
-@router.delete("/{id}", tags=[TAG_MOVIE], status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{id}",
+    dependencies=[Depends(get_current_user_admin)],
+    tags=[TAG_MOVIE],
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 async def delete_movie(session: SessionDep, id: int = Path()):
     """
     Delete a movie by id.

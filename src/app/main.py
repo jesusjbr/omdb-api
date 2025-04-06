@@ -7,7 +7,8 @@ from app.initialization import populate_data
 from exceptions.omdb_repository_exceptions import OmdbRepositoryException
 from logger import logger
 from repositories.database.session_factory import get_session
-from routers.movie_router import router
+from routers.movie_router import router as movie_router
+from routers.user_router import router as user_router
 
 
 @asynccontextmanager
@@ -20,7 +21,8 @@ async def startup(app: FastAPI):
 
 
 app = FastAPI(lifespan=startup)
-app.include_router(router)
+app.include_router(movie_router)
+app.include_router(user_router)
 
 
 # Middlewares

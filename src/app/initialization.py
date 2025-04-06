@@ -3,4 +3,4 @@ from services.start_service import StartService
 
 
 async def populate_data(session: SessionDep):
-    await StartService.save_initial_movies(session=session)
+    await StartService.save_initial_data(session=session)
