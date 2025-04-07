@@ -1,4 +1,4 @@
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 from config import (
@@ -10,14 +10,16 @@ from config import (
     POOL_SIZE,
     POOL_MAX_OVERFLOW,
     DATABASE_NAME,
+    USE_FALLBACK,
 )
 
 url: str = DATABASE_URL.format(
     DATABASE_USER, DATABASE_PASSWORD, DATABASE_ENDPOINT, DATABASE_PORT, DATABASE_NAME
 )
-
-engine: AsyncEngine = create_async_engine(
-    url=url, pool_size=POOL_SIZE, max_overflow=POOL_MAX_OVERFLOW
+engine = (
+    None
+    if USE_FALLBACK
+    else create_async_engine(url=url, pool_size=POOL_SIZE, max_overflow=POOL_MAX_OVERFLOW)
 )
 
 SessionMaker = sessionmaker(class_=AsyncSession, autoflush=False)

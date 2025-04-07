@@ -13,6 +13,7 @@ DATABASE_NAME: str = environ.get("DATABASE_NAME")
 POOL_SIZE: int = int(environ.get("POOL_SIZE", default=5))
 POOL_MAX_OVERFLOW: int = int(environ.get("POOL_MAX_OVERFLOW", default=0))
 DATABASE_URL: str = "postgresql+asyncpg://{}:{}@{}:{}/{}"
+USE_FALLBACK: int = int(environ.get("USE_FALLBACK", default=0))
 # TOKEN CONFIGURATION
 SECRET_KEY: str = environ.get("SECRET_KEY", default="X1s4GqRfG1lkfhznF0FhIEBqhh2cb8W7gFkzM7z1zjY=")
 ALGORITHM = "HS256"
@@ -38,4 +39,6 @@ ORDER_BY_TITLE = "title"
 ORDER_TYPE_ASC = "asc"
 ORDER_BY_ID = "id"
 AUTHORIZATION_HEADER = "Authorization"
-IMDB_ID_UNIQUE_CONSTRAINT="movie_imdb_id_key"
+IMDB_ID_UNIQUE_CONSTRAINT = "movie_imdb_id_key"
+PROJECT_NAME = "Brite test with OMDB"
+API_V1 = "v1"

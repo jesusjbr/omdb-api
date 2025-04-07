@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Path, status, Depends
 
-from config import TAG_MOVIE
+from config import TAG_MOVIE, API_V1
 from core.deps import SessionDep, get_current_user, get_current_user_admin
 from schemas.requests.insert_movies_request import InsertTitleBody
 from schemas.responses.movie_responses import MoviesResponse, SingleMovieResponse
 from schemas.shared.pagination_filter import Pagination
 from services.movie_service import MovieService
 
-router = APIRouter(prefix="/api/{version}/movies")
+router = APIRouter(prefix=f"/api/{API_V1}/movies")
 
 
 @router.post(
@@ -33,8 +33,8 @@ async def insert_movie_by_title(session: SessionDep, body: InsertTitleBody) -> S
 async def get_movies(
     session: SessionDep,
     title: str | None = None,
-    page: int = 1,
-    page_size: int = 10,
+    page: int | None = 1,
+    page_size: int | None = 10,
 ) -> MoviesResponse:
     """
     Retrieves a paginated list of movies, filtered by title if provided.

@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 
-from config import TAG_USER
+from config import TAG_USER, API_V1
 from core.deps import SessionDep
 from schemas.requests.user_login_request import UserLogin
 from schemas.responses.login_response import LoginResponse
 from services.user_service import UserService
 
-router = APIRouter(prefix="/api/{version}/users")
+router = APIRouter(prefix=f"/api/{API_V1}/users")
 
 
 @router.post("/login", tags=[TAG_USER])

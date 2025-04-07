@@ -18,6 +18,12 @@ AuthDep = Annotated[str, Depends(api_key_header)]
 
 
 async def get_current_user(session: SessionDep, token: AuthDep) -> UserData:
+    """
+    Get the username from the payload to authenticate user.
+    :param session: Database session
+    :param token: Token within header Authorization
+    :return: User data
+    """
     try:
         payload: dict = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     except (InvalidTokenError, ValidationError):
@@ -37,6 +43,12 @@ CurrentUser = Annotated[UserData, Depends(get_current_user)]
 
 
 async def get_current_user_admin(current_user: CurrentUser) -> UserData:
+    """
+    Implements role based authorization rasising an exception for the endpoints this dependency is
+    attached if the user is not admin.
+    :param current_user:
+    :return:
+    """
     if not current_user.is_admin:
         raise HTTPException(status_code=403, detail="The user doesn't have enough privileges")
     return current_user

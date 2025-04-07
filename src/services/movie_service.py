@@ -1,6 +1,4 @@
-from sqlalchemy.exc import IntegrityError
-
-from config import ORDER_BY_TITLE, ORDER_TYPE_ASC, ORDER_BY_ID, IMDB_ID_UNIQUE_CONSTRAINT
+from config import ORDER_BY_TITLE, ORDER_TYPE_ASC, ORDER_BY_ID
 from core.deps import SessionDep
 from exceptions.movie_exceptions import MovieNotFoundException, MovieAlreadyExistsException
 from repositories.database.db_movie_repository import MovieDatabaseRepository

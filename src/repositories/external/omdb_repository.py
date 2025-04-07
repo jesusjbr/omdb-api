@@ -84,6 +84,11 @@ class OmdbRepository:
 
     @staticmethod
     async def get_movie_by_title(title: str) -> MovieImdbResponse:
+        """
+        Retrieves a movie using its title.
+        :param title: Title of the movie to retrieve.
+        :return: Response with movie info.
+        """
         params = {"t": title, "apikey": OMDB_API_KEY, "type": TYPE_MOVIE}
         async with AsyncClient() as client:
             response: Response = await client.get(url=OMDB_API_URL, params=params)
