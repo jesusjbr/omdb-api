@@ -14,6 +14,10 @@ POOL_SIZE: int = int(environ.get("POOL_SIZE", default=5))
 POOL_MAX_OVERFLOW: int = int(environ.get("POOL_MAX_OVERFLOW", default=0))
 DATABASE_URL: str = "postgresql+asyncpg://{}:{}@{}:{}/{}"
 USE_FALLBACK: int = int(environ.get("USE_FALLBACK", default=0))
+# GOOGLE CLOUD DEPLOYMENT
+DEPLOY_ENVIRON: str = environ.get("DEPLOY_ENVIRON", default="DEV")
+DB_SOCKET_PATH = "/cloudsql"
+UNIX_SOCKET = f"{DB_SOCKET_PATH}/{DATABASE_ENDPOINT}"
 # TOKEN CONFIGURATION
 SECRET_KEY: str = environ.get("SECRET_KEY", default="X1s4GqRfG1lkfhznF0FhIEBqhh2cb8W7gFkzM7z1zjY=")
 ALGORITHM = "HS256"
