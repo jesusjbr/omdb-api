@@ -91,3 +91,13 @@ sudo docker push gcr.io/YOUR_PROJECT_ID/fastapi-app
 ```
 If you have problems for the push part use
 gcloud auth configure-docker
+
+Now connect to the database and execute the SQL script `scripts/database_creation.sql`
+gcloud run deploy fastapi-app \
+  --image gcr.io/YOUR_PROJECT_ID/fastapi-app \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --add-cloudsql-instances YOUR_PROJECT_ID:us-central1:INSTANCE_ID \
+  --set-env-vars="DATABASE_USERNAME=YOUR_DB_USER,DATABASE_PASSWORD=YOUR_DB_PASSWORD,DATABASE_NAME=YOUR_DB_NAME,DATABASE_HOST=/cloudsql/YOUR_PROJECT_ID:us-central1:INSTANCE_ID"
+
