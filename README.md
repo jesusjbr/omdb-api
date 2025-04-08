@@ -69,7 +69,7 @@ gcloud run deploy app-remaster \
 This will provide you with a URL visit it and add /docs to use the swagger and test the app.
 
 # Steps to execute in local
-Replace the data for your own.\
+Replace the data with your own.\
 Most of these steps could be automated using docker compose. \
 \
 Create network \
@@ -129,8 +129,8 @@ DEMO USER
 ADMIN USER
 ```json
 {
-  "username": "demo_user",
-  "password": "1234"
+  "username": "admin_user",
+  "password": "12345"
 }
 ```
 Every endpoint requires authentication. The delete endpoint besides requires to have the admin role
