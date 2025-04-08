@@ -30,6 +30,7 @@ ADMIN_USER_IS_ADMIN = True
 # Constants
 TAG_MOVIE: str = "Movies"
 TAG_USER: str = "Users"
+TAG_HEALTHCHECK: str = "Healthcheck"
 TYPE_MOVIE: str = "movie"
 MAX_TOTAL_RESULTS: int = 100
 RESULTS_PER_PAGE: int = 10
