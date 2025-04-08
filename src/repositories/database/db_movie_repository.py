@@ -84,7 +84,7 @@ class MovieDatabaseRepository:
         session: SessionDep, title: str | None, limit: int | None = None, offset: int | None = None
     ) -> tuple[list[Movie], int]:
         """
-        Retrieves a list of movies. If title is provided the movies are ordered by title,
+        Retrieves a list of movies. If title is not provided the movies are ordered by title,
         otherwise by id.
         :param session: The database session to use for the query.
         :param title: Filter to get only movies whose title matches exactly this.

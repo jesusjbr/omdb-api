@@ -1,7 +1,7 @@
 # omdb-api
 This repository contains my solution for a coding exercise
 
-# Prerrequisites 
+# Prerequisites 
 * Docker
 * Git client
 
@@ -96,6 +96,7 @@ Build docker image from Dockerfile \
 `sudo docker build -t omdb-api-app-image .`
 
 Start the container
+```commandline
 sudo docker run -d --name app-container-uv --network app-network \
     -p 80:80 \
     -e DATABASE_ENDPOINT="pg-db" \
@@ -105,13 +106,14 @@ sudo docker run -d --name app-container-uv --network app-network \
     -e OMDB_API_KEY="XXXXXXX" \
     -e DATABASE_NAME="mydatabase" \
     omdb-api-app-image
+```
 
 If you don't have other things up and running:
 Visit http://localhost:80/docs or http://127.0.0.1:80/docs and use the swagger.
 
 
 # How to use
-At startup the app creates a coulpe of dummy users to test the app. \
+At startup the app creates a couple of dummy users to test the app. \
 In this startup the initial movies are fetched and inserted. \
 The users are required since I didn't implement an endpoint to register or create new users.
 In case that something goes wrong you need to execute the SQL script that will clean and create

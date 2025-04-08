@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 
 from core.deps import SessionDep
-from repositories.db_health_repository import HealthRepository
+from repositories.database.db_health_repository import HealthRepository
 
 
 class HealthService:
