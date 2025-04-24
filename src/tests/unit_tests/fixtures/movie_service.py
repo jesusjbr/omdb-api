@@ -6,7 +6,7 @@ from config import ORDER_TYPE_ASC, ORDER_BY_ID
 from repositories.database.movie import MovieDatabaseRepository
 from schemas.responses.movie import MoviesResponse
 from schemas.responses.omdb import MovieImdbResponse
-from schemas.shared.movie_schemas import MovieCreate, MovieGet
+from schemas.shared.movie import MovieCreate, MovieGet
 from schemas.shared.pagination_filter import Pagination
 
 
@@ -47,7 +47,7 @@ def mock_movie_imdb_response():
 def mock_omdb_repository_get_movie_by_title(monkeypatch, mock_movie_imdb_response):
     mock = AsyncMock(return_value=mock_movie_imdb_response)
     monkeypatch.setattr(
-        "repositories.external.omdb_repository.OmdbRepository.get_movie_by_title",
+        "repositories.external.omdb.OmdbRepository.get_movie_by_title",
         mock,
     )
     return mock
@@ -57,7 +57,7 @@ def mock_omdb_repository_get_movie_by_title(monkeypatch, mock_movie_imdb_respons
 def mock_movie_database_repository_create(monkeypatch, mock_movie_from_database):
     mock = AsyncMock(return_value=mock_movie_from_database)
     monkeypatch.setattr(
-        "repositories.database.db_movie_repository.MovieDatabaseRepository.create",
+        "repositories.database.movie.MovieDatabaseRepository.create",
         mock,
     )
     return mock
@@ -89,7 +89,7 @@ def mock_get_single_movie_movie_response(mock_movie_from_database):
 def mock_movie_database_repository_get_all_paginated(monkeypatch, mock_movie_from_database):
     mock = AsyncMock(return_value=([mock_movie_from_database], 1))
     monkeypatch.setattr(
-        "repositories.database.db_movie_repository.MovieDatabaseRepository.get_all_paginated",
+        "repositories.database.movie.MovieDatabaseRepository.get_all_paginated",
         mock,
     )
     return mock
@@ -112,7 +112,7 @@ def mock_get_movies_response(mock_movie_from_database):
 def mock_movie_database_repository_get(monkeypatch, mock_movie_from_database):
     mock = AsyncMock(return_value=(mock_movie_from_database))
     monkeypatch.setattr(
-        "repositories.database.db_movie_repository.MovieDatabaseRepository.get",
+        "repositories.database.movie.MovieDatabaseRepository.get",
         mock,
     )
     return mock
@@ -122,7 +122,7 @@ def mock_movie_database_repository_get(monkeypatch, mock_movie_from_database):
 def mock_movie_database_repository_delete(monkeypatch):
     mock = AsyncMock(return_value=True)
     monkeypatch.setattr(
-        "repositories.database.db_movie_repository.MovieDatabaseRepository.delete",
+        "repositories.database.movie.MovieDatabaseRepository.delete",
         mock,
     )
     return mock

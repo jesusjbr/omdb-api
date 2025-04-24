@@ -15,8 +15,8 @@ from repositories.database.movie import MovieDatabaseRepository
 from repositories.database.user import UserDatabaseRepository
 from repositories.external.omdb import OmdbRepository
 from schemas.responses.omdb import MovieImdbResponse
-from schemas.shared.movie_schemas import MovieCreate
-from schemas.shared.user_schema import UserData
+from schemas.shared.movie import MovieCreate
+from schemas.shared.user import UserData
 
 
 class StartService:

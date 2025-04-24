@@ -6,7 +6,7 @@ from repositories.database.models.movie import Movie
 from repositories.external.omdb import OmdbRepository
 from schemas.responses.movie import MoviesResponse, SingleMovieResponse
 from schemas.responses.omdb import MovieImdbResponse
-from schemas.shared.movie_schemas import MovieGet, MovieCreate
+from schemas.shared.movie import MovieGet, MovieCreate
 from schemas.shared.pagination_filter import Pagination
 
 

@@ -14,7 +14,7 @@ from exceptions.omdb_repository_exceptions import (
     OmdbRepositoryInternalServerErrorException,
     OmdbRepositoryInvalidResponseFormatException,
 )
-from schemas.responses.omdb_responses import MovieSearchResponse, MovieImdbResponse
+from schemas.responses.omdb import MovieSearchResponse, MovieImdbResponse
 
 T = TypeVar("T", bound=BaseModel)
 

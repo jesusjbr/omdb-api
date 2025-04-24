@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from repositories.database.models.user import User
-from schemas.shared.user_schema import UserData
+from schemas.shared.user import UserData
 
 
 class UserDatabaseRepository:

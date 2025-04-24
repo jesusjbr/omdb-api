@@ -12,7 +12,7 @@ from schemas.responses.movie import SingleMovieResponse, MoviesResponse
 def mock_delete_movie(monkeypatch):
     mock = AsyncMock(return_value=None)
     monkeypatch.setattr(
-        "services.movie_service.MovieService.delete_movie",
+        "services.movie.MovieService.delete_movie",
         mock,
     )
     return mock
@@ -22,7 +22,7 @@ def mock_delete_movie(monkeypatch):
 def mock_get_single_movie(monkeypatch, mock_single_movie_response):
     mock = AsyncMock(return_value=mock_single_movie_response)
     monkeypatch.setattr(
-        "services.movie_service.MovieService.get_single_movie",
+        "services.movie.MovieService.get_single_movie",
         mock,
     )
     return mock
@@ -32,7 +32,7 @@ def mock_get_single_movie(monkeypatch, mock_single_movie_response):
 def mock_get_movies(monkeypatch, mock_get_movies_response):
     mock = AsyncMock(return_value=mock_get_movies_response)
     monkeypatch.setattr(
-        "services.movie_service.MovieService.get_movies",
+        "services.movie.MovieService.get_movies",
         mock,
     )
     return mock
@@ -42,7 +42,7 @@ def mock_get_movies(monkeypatch, mock_get_movies_response):
 def mock_insert_movie_by_title(monkeypatch, mock_single_movie_response):
     mock = AsyncMock(return_value=mock_single_movie_response)
     monkeypatch.setattr(
-        "services.movie_service.MovieService.insert_movie_by_title",
+        "services.movie.MovieService.insert_movie_by_title",
         mock,
     )
     return mock

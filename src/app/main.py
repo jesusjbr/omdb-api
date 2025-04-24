@@ -7,9 +7,9 @@ from app.initialization import populate_data
 from exceptions.omdb_repository_exceptions import OmdbRepositoryException
 from logger import logger
 from repositories.database.session_factory import get_session
-from routers.movie_router import router as movie_router
-from routers.user_router import router as user_router
-from routers.health_router import router as health_router
+from routers.movie import router as movie_router
+from routers.user import router as user_router
+from routers.health import router as health_router
 
 
 @asynccontextmanager

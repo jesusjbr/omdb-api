@@ -4,9 +4,9 @@ from sqlalchemy.exc import IntegrityError
 from config import IMDB_ID_UNIQUE_CONSTRAINT
 from exceptions.movie_exceptions import MovieNotFoundException, MovieAlreadyExistsException
 from schemas.shared.pagination_filter import Pagination
-from services.movie_service import MovieService
-from tests.unit_tests.fixtures.client_fixtures import mock_session
-from tests.unit_tests.fixtures.movie_service_fixtures import (
+from services.movie import MovieService
+from tests.unit_tests.fixtures.client import mock_session
+from tests.unit_tests.fixtures.movie_service import (
     mock_omdb_repository_get_movie_by_title,
     mock_movie_database_repository_create,
     mock_movie_to_create,
@@ -116,7 +116,7 @@ async def test_get_single_movie_not_found(
         _ = await MovieService.get_single_movie(session=mock_session, id=id)
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyo
 async def test_delete_movie(
     mock_session, mock_movie_database_repository_delete, mock_get_single_movie_movie_response
 ):
@@ -126,7 +126,7 @@ async def test_delete_movie(
     mock_movie_database_repository_delete.assert_awaited_once_with(session=mock_session, id=id)
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyo
 async def test_delete_movie_not_found(mock_session, mock_movie_database_repository_delete):
     """Checks that MovieNotFoundException is raised"""
     id = 1

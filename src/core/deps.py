@@ -8,9 +8,9 @@ from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import SECRET_KEY, ALGORITHM, AUTHORIZATION_HEADER
-from repositories.database.db_user_repository import UserDatabaseRepository
+from repositories.database.user import UserDatabaseRepository
 from repositories.database.session_factory import get_session
-from schemas.shared.user_schema import UserData
+from schemas.shared.user import UserData
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 api_key_header = APIKeyHeader(name=AUTHORIZATION_HEADER)
@@ -39,10 +39,10 @@ async def get_current_user(session: SessionDep, token: AuthDep) -> UserData:
     return UserData.model_validate(user)
 
 
-CurrentUser = Annotated[UserData, Depends(get_current_user)]
+CurrentUserDep = Annotated[UserData, Depends(get_current_user)]
 
 
-async def get_current_user_admin(current_user: CurrentUser) -> UserData:
+async def get_current_user_admin(current_user: CurrentUserDep) -> UserData:
     """
     Implements role based authorization rasising an exception for the endpoints this dependency is
     attached if the user is not admin.
@@ -52,3 +52,5 @@ async def get_current_user_admin(current_user: CurrentUser) -> UserData:
     if not current_user.is_admin:
         raise HTTPException(status_code=403, detail="The user doesn't have enough privileges")
     return current_user
+
+CurrentAdminDep = Annotated[UserData, Depends(get_current_user_admin)]

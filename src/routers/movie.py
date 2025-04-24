@@ -1,19 +1,19 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 
 from config import TAG_MOVIE, API_V1
 from core.deps import SessionDep, CurrentUserDep, \
-    CurrentAdminDep
-from schemas.requests.insert_movies_request import InsertTitleBody
-from schemas.responses.movie_responses import MoviesResponse, SingleMovieResponse
+    CurrentAdminDep, get_current_user, get_current_user_admin
+from schemas.requests.insert_movies import InsertTitleBody
+from schemas.responses.movie import MoviesResponse, SingleMovieResponse
 from schemas.shared.pagination_filter import Pagination
-from services.movie_service import MovieService
+from services.movie import MovieService
 
 router = APIRouter(prefix=f"/api/{API_V1}/movies", tags=[TAG_MOVIE])
 
 
 @router.post(
     "",
-    dependencies=[CurrentUserDep],
+    dependencies=[Depends(get_current_user)],
     status_code=status.HTTP_201_CREATED,
 )
 async def insert_movie_by_title(session: SessionDep, body: InsertTitleBody) -> SingleMovieResponse:
@@ -29,7 +29,7 @@ async def insert_movie_by_title(session: SessionDep, body: InsertTitleBody) -> S
     return await MovieService.insert_movie_by_title(session=session, title=body.title)
 
 
-@router.get("", dependencies=[CurrentUserDep])
+@router.get("", dependencies=[Depends(get_current_user)])
 async def get_movies(
     session: SessionDep,
     title: str | None = None,
@@ -51,7 +51,7 @@ async def get_movies(
     )
 
 
-@router.get("/{id}", dependencies=[CurrentUserDep])
+@router.get("/{id}", dependencies=[Depends(get_current_user)])
 async def get_single_movie(session: SessionDep, id: int) -> SingleMovieResponse:
     """
     Retrieves a movie by id.
@@ -64,7 +64,7 @@ async def get_single_movie(session: SessionDep, id: int) -> SingleMovieResponse:
 
 @router.delete(
     "/{id}",
-    dependencies=[CurrentAdminDep],
+    dependencies=[Depends(get_current_user_admin)],
     status_code=status.HTTP_204_NO_CONTENT,
 )
 async def delete_movie(session: SessionDep, id: int):

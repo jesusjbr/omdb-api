@@ -6,7 +6,7 @@ from config import IMDB_ID_UNIQUE_CONSTRAINT
 from core.deps import SessionDep
 from repositories.database.models.movie import Movie
 from repositories.database.models.rating import Rating
-from schemas.shared.movie_schemas import MovieCreate
+from schemas.shared.movie import MovieCreate
 
 
 class MovieDatabaseRepository:

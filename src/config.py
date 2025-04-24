@@ -8,7 +8,7 @@ OMDB_API_URL: str = environ.get("OMDB_API_URL", default="https://www.omdbapi.com
 DATABASE_ENDPOINT: str = environ.get("DATABASE_ENDPOINT")
 DATABASE_USER: str = environ.get("DATABASE_USER")
 DATABASE_PASSWORD: str = environ.get("DATABASE_PASSWORD")
-DATABASE_PORT: str = environ.get("DATABASE_PORT")
+DATABASE_PORT: str = environ.get("DATABASE_PORT", default=5432)
 DATABASE_NAME: str = environ.get("DATABASE_NAME")
 POOL_SIZE: int = int(environ.get("POOL_SIZE", default=5))
 POOL_MAX_OVERFLOW: int = int(environ.get("POOL_MAX_OVERFLOW", default=0))

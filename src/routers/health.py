@@ -2,7 +2,7 @@ from fastapi import APIRouter, status
 
 from config import TAG_HEALTHCHECK
 from core.deps import SessionDep
-from services.health_service import HealthService
+from services.health import HealthService
 
 router = APIRouter()
 

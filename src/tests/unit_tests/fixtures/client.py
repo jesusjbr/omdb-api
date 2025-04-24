@@ -2,12 +2,12 @@ from unittest import mock
 from unittest.mock import MagicMock
 
 import pytest
-from fastapi.testclient import TestClient
+from httpx import AsyncClient, ASGITransport
 
 from app.main import app
 from core.deps import get_current_user
 from repositories.database.session_factory import get_session
-from schemas.shared.user_schema import UserData
+from schemas.shared.user import UserData
 
 
 @pytest.fixture(scope="function")
@@ -51,27 +51,36 @@ def override_get_user_admin(fake_admin_user):
 
 
 @pytest.fixture(scope="function")
-def fake_client_regular_user(monkeypatch, override_get_user_regular, override_session_dependency):
+async def fake_client_regular_user(monkeypatch, override_get_user_regular, override_session_dependency):
     """Fixture to create a fake client for testing"""
     mock_populate_data = mock.AsyncMock()
     monkeypatch.setattr("app.main.populate_data", mock_populate_data)
-    with TestClient(app) as client:
+    async with AsyncClient(
+            transport=ASGITransport(app=app),
+            base_url="http://test"
+    ) as client:
         yield client
 
 
 @pytest.fixture(scope="function")
-def fake_client_admin_user(monkeypatch, override_get_user_admin, override_session_dependency):
+async def fake_client_admin_user(monkeypatch, override_get_user_admin, override_session_dependency):
     """Fixture to create a fake client for testing"""
     mock_populate_data = mock.AsyncMock()
     monkeypatch.setattr("app.main.populate_data", mock_populate_data)
-    with TestClient(app) as client:
+    async with AsyncClient(
+        transport=ASGITransport(app=app),
+        base_url="http://test"
+    ) as client:
         yield client
 
 
 @pytest.fixture(scope="function")
-def fake_client_without_user(monkeypatch, override_session_dependency):
+async def fake_client_without_user(monkeypatch, override_session_dependency):
     """Fixture to create a fake client for testing"""
     mock_populate_data = mock.AsyncMock()
     monkeypatch.setattr("app.main.populate_data", mock_populate_data)
-    with TestClient(app) as client:
+    async with AsyncClient(
+            transport=ASGITransport(app=app),
+            base_url="http://test"
+    ) as client:
         yield client
