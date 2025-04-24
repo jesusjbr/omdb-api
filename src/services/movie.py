@@ -1,11 +1,11 @@
 from config import ORDER_BY_TITLE, ORDER_TYPE_ASC, ORDER_BY_ID
 from core.deps import SessionDep
 from exceptions.movie_exceptions import MovieNotFoundException, MovieAlreadyExistsException
-from repositories.database.db_movie_repository import MovieDatabaseRepository
+from repositories.database.movie import MovieDatabaseRepository
 from repositories.database.models.movie import Movie
-from repositories.external.omdb_repository import OmdbRepository
-from schemas.responses.movie_responses import MoviesResponse, SingleMovieResponse
-from schemas.responses.omdb_responses import MovieImdbResponse
+from repositories.external.omdb import OmdbRepository
+from schemas.responses.movie import MoviesResponse, SingleMovieResponse
+from schemas.responses.omdb import MovieImdbResponse
 from schemas.shared.movie_schemas import MovieGet, MovieCreate
 from schemas.shared.pagination_filter import Pagination
 

@@ -5,7 +5,7 @@ import pytest
 
 from config import ORDER_TYPE_ASC, ORDER_BY_ID
 from repositories.database.models.rating import Rating
-from schemas.responses.movie_responses import SingleMovieResponse, MoviesResponse
+from schemas.responses.movie import SingleMovieResponse, MoviesResponse
 
 
 @pytest.fixture(scope="function")

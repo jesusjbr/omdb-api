@@ -3,10 +3,10 @@ from fastapi import HTTPException, status
 from config import ACCESS_TOKEN_EXPIRE_TIME_DELTA
 from core.deps import SessionDep
 from core.security import Security
-from repositories.database.db_user_repository import UserDatabaseRepository
+from repositories.database.user import UserDatabaseRepository
 from repositories.database.models.user import User
-from schemas.requests.user_login_request import UserLogin
-from schemas.responses.login_response import LoginResponse
+from schemas.requests.user_login import UserLogin
+from schemas.responses.login import LoginResponse
 
 
 class UserService:

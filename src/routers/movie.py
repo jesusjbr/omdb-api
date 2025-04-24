@@ -1,19 +1,19 @@
-from fastapi import APIRouter, Path, status, Depends
+from fastapi import APIRouter, status
 
 from config import TAG_MOVIE, API_V1
-from core.deps import SessionDep, get_current_user, get_current_user_admin
+from core.deps import SessionDep, CurrentUserDep, \
+    CurrentAdminDep
 from schemas.requests.insert_movies_request import InsertTitleBody
 from schemas.responses.movie_responses import MoviesResponse, SingleMovieResponse
 from schemas.shared.pagination_filter import Pagination
 from services.movie_service import MovieService
 
-router = APIRouter(prefix=f"/api/{API_V1}/movies")
+router = APIRouter(prefix=f"/api/{API_V1}/movies", tags=[TAG_MOVIE])
 
 
 @router.post(
     "",
-    dependencies=[Depends(get_current_user)],
-    tags=[TAG_MOVIE],
+    dependencies=[CurrentUserDep],
     status_code=status.HTTP_201_CREATED,
 )
 async def insert_movie_by_title(session: SessionDep, body: InsertTitleBody) -> SingleMovieResponse:
@@ -29,12 +29,12 @@ async def insert_movie_by_title(session: SessionDep, body: InsertTitleBody) -> S
     return await MovieService.insert_movie_by_title(session=session, title=body.title)
 
 
-@router.get("", dependencies=[Depends(get_current_user)], tags=[TAG_MOVIE])
+@router.get("", dependencies=[CurrentUserDep])
 async def get_movies(
     session: SessionDep,
     title: str | None = None,
-    page: int | None = 1,
-    page_size: int | None = 10,
+    page: int = 1,
+    page_size: int = 10,
 ) -> MoviesResponse:
     """
     Retrieves a paginated list of movies, filtered by title if provided.
@@ -51,8 +51,8 @@ async def get_movies(
     )
 
 
-@router.get("/{id}", dependencies=[Depends(get_current_user)], tags=[TAG_MOVIE])
-async def get_single_movie(session: SessionDep, id: int = Path()) -> SingleMovieResponse:
+@router.get("/{id}", dependencies=[CurrentUserDep])
+async def get_single_movie(session: SessionDep, id: int) -> SingleMovieResponse:
     """
     Retrieves a movie by id.
     :param session: A database session
@@ -64,11 +64,10 @@ async def get_single_movie(session: SessionDep, id: int = Path()) -> SingleMovie
 
 @router.delete(
     "/{id}",
-    dependencies=[Depends(get_current_user_admin)],
-    tags=[TAG_MOVIE],
+    dependencies=[CurrentAdminDep],
     status_code=status.HTTP_204_NO_CONTENT,
 )
-async def delete_movie(session: SessionDep, id: int = Path()):
+async def delete_movie(session: SessionDep, id: int):
     """
     Delete a movie by id.
     :param session: A database session

@@ -3,9 +3,9 @@ from unittest.mock import AsyncMock
 import pytest
 
 from config import ORDER_TYPE_ASC, ORDER_BY_ID
-from repositories.database.db_movie_repository import MovieDatabaseRepository
-from schemas.responses.movie_responses import MoviesResponse
-from schemas.responses.omdb_responses import MovieImdbResponse
+from repositories.database.movie import MovieDatabaseRepository
+from schemas.responses.movie import MoviesResponse
+from schemas.responses.omdb import MovieImdbResponse
 from schemas.shared.movie_schemas import MovieCreate, MovieGet
 from schemas.shared.pagination_filter import Pagination
 

@@ -11,10 +11,10 @@ from config import (
 )
 from core.deps import SessionDep
 from core.security import Security
-from repositories.database.db_movie_repository import MovieDatabaseRepository
-from repositories.database.db_user_repository import UserDatabaseRepository
-from repositories.external.omdb_repository import OmdbRepository
-from schemas.responses.omdb_responses import MovieImdbResponse
+from repositories.database.movie import MovieDatabaseRepository
+from repositories.database.user import UserDatabaseRepository
+from repositories.external.omdb import OmdbRepository
+from schemas.responses.omdb import MovieImdbResponse
 from schemas.shared.movie_schemas import MovieCreate
 from schemas.shared.user_schema import UserData
 

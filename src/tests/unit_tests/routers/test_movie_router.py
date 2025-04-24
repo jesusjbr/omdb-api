@@ -1,9 +1,9 @@
 import pytest
 from fastapi import status
 
-from schemas.requests.insert_movies_request import InsertTitleBody
+from schemas.requests.insert_movies import InsertTitleBody
 from schemas.shared.pagination_filter import Pagination
-from tests.unit_tests.fixtures.client_fixtures import (
+from tests.unit_tests.fixtures.client import (
     override_get_user_admin,
     override_get_user_regular,
     override_session_dependency,
@@ -14,7 +14,7 @@ from tests.unit_tests.fixtures.client_fixtures import (
     fake_client_regular_user,
     fake_client_without_user,
 )
-from tests.unit_tests.fixtures.movie_router_fixtures import (
+from tests.unit_tests.fixtures.movie_router import (
     mock_delete_movie,
     mock_movie_id,
     mock_get_single_movie,
